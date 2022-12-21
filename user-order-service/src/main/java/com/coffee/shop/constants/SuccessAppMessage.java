@@ -6,6 +6,7 @@ public final class SuccessAppMessage implements AppMessage {
 
 	public static final AppMessage OK = new SuccessAppMessage(200, "OK");
 	public static final AppMessage OK_ORDER_PLACED = new SuccessAppMessage(200, "You order is succesfully placed by the Coffeeshop");
+	public static final AppMessage OK_ORDER_DETAILS = new SuccessAppMessage(200, "Order Details");
 
 	final int resultCode;
 	final String message;

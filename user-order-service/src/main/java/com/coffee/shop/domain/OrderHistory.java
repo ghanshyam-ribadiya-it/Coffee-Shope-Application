@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,12 +28,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderHistory {
-	/*@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false, insertable = false, updatable = false)
-	private Long id;
-	*/
-	
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -42,8 +35,8 @@ public class OrderHistory {
 	private String orderId;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
-	private Users user;
+	@JoinColumn(name = "customer_id", nullable = false)
+	private Users customer;
 
 	@ManyToOne
 	@JoinColumn(name = "coffee_shop_id", nullable = false)
@@ -52,6 +45,9 @@ public class OrderHistory {
 	@ManyToOne
 	@JoinColumn(name = "menu_id", nullable = false)
 	private Menu menu;
+	
+	@Column(name = "price", nullable = false)
+	private BigDecimal price;
 
 	@Column(name = "quantity", nullable = false)
 	private Integer quantity;
