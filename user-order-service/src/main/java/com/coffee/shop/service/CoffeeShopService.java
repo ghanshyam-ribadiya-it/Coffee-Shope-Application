@@ -1,33 +1,34 @@
 package com.coffee.shop.service;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.coffee.shop.constants.ErrorAppMessage;
-import com.coffee.shop.domain.UserHasCoffeeShop;
-import com.coffee.shop.exception.ShopException;
-import com.coffee.shop.repository.UserHasCoffeeShopRepository;
-
+import com.coffee.shop.model.CoffeeShopDetailResponse;
+import com.coffee.shop.model.MenuResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-@Service
+@Component
 public class CoffeeShopService {
-	
-	@Autowired
-	private UserHasCoffeeShopRepository userHasCoffeeShopRepository;
 
-	public UserHasCoffeeShop getCoffeeShopById(Long coffeeShopId) {
-		log.info("Find CoffeeShop by coffeeShopId : {}", coffeeShopId);
-		
-		Optional<UserHasCoffeeShop> coffeeShop = userHasCoffeeShopRepository.findById(coffeeShopId);
-		if (coffeeShop.isPresent()) {
-			return coffeeShop.get();
-		}
-		
-		throw new ShopException(ErrorAppMessage.COFFEE_SHOP_NOT_FOUND);
-	}
+    @Autowired
+    private RestTemplate restTemplate;
 
+    public CoffeeShopDetailResponse getCoffeeShopDetailById(Long coffeeShopId) {
+        log.info("CoffeeShop API is going to call for the coffeeShopId : {}", coffeeShopId);
+
+        CoffeeShopDetailResponse coffeeShopDetailResponse = restTemplate.getForObject("http://COFFEE-SHOP-SERVICE/coffeeShop/" + coffeeShopId, CoffeeShopDetailResponse.class);
+        log.info("CoffeeShop API response code : {}", coffeeShopDetailResponse.getResultCode());
+
+        return coffeeShopDetailResponse;
+    }
+
+    public MenuResponse getMenuDetailsByIds(Long coffeeShopId, Long menuId) {
+        log.info("CoffeeShop API is going to call for the coffeeShopId : {}, menuId : {}", coffeeShopId, menuId);
+
+        MenuResponse menuResponse = restTemplate.getForObject("http://COFFEE-SHOP-SERVICE/coffeeShop/" + coffeeShopId + "/menu/" + menuId, MenuResponse.class);
+        log.info("CoffeeShop API response code : {}", menuResponse.getResultCode());
+
+        return menuResponse;
+    }
 }

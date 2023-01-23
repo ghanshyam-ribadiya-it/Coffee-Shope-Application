@@ -13,30 +13,30 @@ import com.coffee.shop.model.OrderDetailListResponse;
 import com.coffee.shop.model.OrderDetailResponse;
 import com.coffee.shop.model.OrderRequest;
 import com.coffee.shop.model.OrderResponse;
-import com.coffee.shop.service.OrderHistoryService;
+import com.coffee.shop.service.OrderService;
 
 @RestController
 @RequestMapping("/order")
 public class OrderController {
 
 	@Autowired
-	private OrderHistoryService orderHistoryService;
+	private OrderService orderService;
 
 	@PostMapping("/create")
 	public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
-		OrderResponse orderResponse = orderHistoryService.saveRequestedOrder(orderRequest);
+		OrderResponse orderResponse = orderService.saveRequestedOrder(orderRequest);
 		return ResponseEntity.ok(orderResponse);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<OrderDetailResponse> getOrderDetail(@PathVariable String id) {
-		OrderDetailResponse orderDetailResponse = orderHistoryService.getOrderDetails(id);
+		OrderDetailResponse orderDetailResponse = orderService.getOrderDetails(id);
 		return ResponseEntity.ok(orderDetailResponse);
 	}
 	
 	@GetMapping("/queue/coffeeShop/{id}")
 	public ResponseEntity<OrderDetailListResponse> getOrderQueue(@PathVariable Long id) {
-		OrderDetailListResponse orderDetailListResponse = orderHistoryService.retriveQueueOrders(id);
+		OrderDetailListResponse orderDetailListResponse = orderService.retrieveQueueOrders(id);
 		return ResponseEntity.ok(orderDetailListResponse);
 	}
 

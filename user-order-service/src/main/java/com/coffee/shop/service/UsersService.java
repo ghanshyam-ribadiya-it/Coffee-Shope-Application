@@ -1,32 +1,35 @@
 package com.coffee.shop.service;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.coffee.shop.constants.ErrorAppMessage;
-import com.coffee.shop.domain.Users;
-import com.coffee.shop.exception.ShopException;
-import com.coffee.shop.repository.UsersRepository;
-
+import com.coffee.shop.model.UserDetailResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-@Service
+@Component
 public class UsersService {
 
-	@Autowired
-	private UsersRepository usersRepository;
+    @Autowired
+    private RestTemplate restTemplate;
 
-	public Users getUserById(Long userId) {
-		log.info("Find User by userId : {}", userId);
-		
-		Optional<Users> users = usersRepository.findById(userId);
-		if (users.isPresent()) {
-			return users.get();
-		}
-		
-		throw new ShopException(ErrorAppMessage.USER_NOT_FOUND);
-	}
+    private static final String SERVICE_USER = "userService";
+
+    @CircuitBreaker(name = SERVICE_USER, fallbackMethod = "getUserDetailByIdFallBack")
+    public UserDetailResponse getUserDetailById(Long userId) {
+        log.info("User service is going to call to retrieve the user detail for the User Id : {}", userId);
+
+        UserDetailResponse userDetailResponse = restTemplate.getForObject("http://USER-SERVICE/user/" + userId, UserDetailResponse.class);
+        log.info("Response from the User service is : {}", userDetailResponse.getResultCode());
+
+        return userDetailResponse;
+    }
+
+    public UserDetailResponse getUserDetailByIdFallBack(Long userId, Exception e) {
+        log.error("Fall back method is called for the user service api");
+        UserDetailResponse userDetailResponse = new UserDetailResponse(ErrorAppMessage.EXCEPTION_IN_USER_SERVICE);
+        return userDetailResponse;
+    }
 }

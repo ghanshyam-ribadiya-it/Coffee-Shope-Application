@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class OrderDetail {
 	private String orderId;
-	private CustomerDetail customerDetail;
+	private UserDetail customerDetail;
 	private CoffeeShopDetail coffeeShopDetail;
 	private MenuDetail menuDetail;
 	private BigDecimal price;

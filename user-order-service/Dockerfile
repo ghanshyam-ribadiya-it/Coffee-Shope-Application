@@ -1,7 +1,7 @@
-FROM openjdk:8-alpine
+FROM openjdk:8
 
-LABEL "Maintainer"="Ghanshyam"
-
-add target/*.jar user-order-service.jar
+COPY target/*.jar user-order-service.jar
 
 ENTRYPOINT ["java", "-jar", "user-order-service.jar"]
+
+EXPOSE 9003

@@ -1,0 +1,21 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**
+        - id: COFFEE-SHOP-SERVICE
+          uri: lb://COFFEE-SHOP-SERVICE
+          predicates:
+            - Path=/coffeeShop/**
+        - id: USER-ORDER-SERVICE
+          uri: lb://USER-ORDER-SERVICE
+          predicates:
+            - Path=/order/**

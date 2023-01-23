@@ -7,6 +7,5 @@
 
     <!-- Changes to include -->
     <include file="/db/changelog/changes/app_init.sql"/>
-    <include file="/db/changelog/changes/app_default_insert.sql"/>
    
 </databaseChangeLog>
